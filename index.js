@@ -19,19 +19,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-exports.callbackify = function callbackify(original) {
-  return function(callback) {
-    original().then(function (result) {
-      callback(null, result)
-    }).catch(function (err) {
-      if (err === null) {
-        err = new Error()
-        err.reason = null
-      }
-      callback(err)
-    })
-  }
-}
+exports.callbackify = require('./callbackify')
 
 var debugs = {};
 var debugEnviron;
@@ -53,26 +41,12 @@ exports.debuglog = function debuglog(set) {
   return debugs[set];
 };
 
-// Mark that a method should not be used.
-// Returns a modified function which warns once by default.
-// If --no-deprecation is set, then it is a no-op.
-exports.deprecate = function(fn, msg) {
-  var warned = false;
-  function deprecated() {
-    if (!warned) {
-      console.error(msg);
-      warned = true;
-    }
-    return fn.apply(this, arguments);
-  }
-
-  return deprecated;
-};
+exports.deprecate = require('./deprecate');
 
 var formatRegExp = /%[sdifjoO%]/g;
 exports.format = function(f) {
   if (arguments.length <= 1) {
-    return '' + f
+    return inspect(f)
   }
   if (!isString(f)) {
     var objects = [];
@@ -356,7 +330,17 @@ function formatValue(ctx, value, recurseTimes, ln) {
       return formatError(value);
     base = `${formatError(value)}`;
   } else if (!isObject(value) && getNativeClass(value)) {
-    return ctx.stylize('<' + getNativeClass(value) + '>', 'special')
+    var description = value && value.description && String(value.description())
+    var nativeClass = getNativeClass(value)
+    if (description && description[0] === '<' && description[description.length - 1] === '>') {
+      // most of the MS* classes
+      return ctx.stylize(description, 'special')
+    } else if (description) {
+      // prefix the description with the class otherwise it can lead to some misunderstanding
+      return ctx.stylize('<' + nativeClass + '> ' + description, 'special')
+    } else {
+      return ctx.stylize('<' + getNativeClass(value) + '>', 'special')
+    }
   } else  if (isObject(value) && getNativeClass(value)) {
     braces = [prefix + '{', '}'];
   }
@@ -745,29 +729,6 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-function hasOwnProperty(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-}
-
 exports.isDeepStrictEqual = require('./deep-equal')
 
-var customPromisify = 'promisify'
-
-exports.promisify = function (fn) {
-  if (fn[customPromisify]) {
-    return fn[customPromisify]
-  }
-  return function () {
-    var args = toArray(arguments)
-    return new Promise(function (resolve, reject) {
-      args.push(function (err, value) {
-        if (typeof err !== 'undefined' && err !== null) {
-          return reject(err)
-        }
-        return resolve(value)
-      })
-      fn.apply(this, args)
-    })
-  }
-}
-exports.promisify.custom = customPromisify
+exports.promisify = require('./promisify')
