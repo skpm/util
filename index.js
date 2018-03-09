@@ -276,6 +276,10 @@ function formatValue(ctx, value, recurseTimes, ln) {
     } catch (err) {}
   }
 
+  if (value && value._isWrappedObject) {
+    value = value.toJSON()
+  }
+
   var keys;
 
   if (ctx.showHidden) {
@@ -332,9 +336,9 @@ function formatValue(ctx, value, recurseTimes, ln) {
   } else if (!isObject(value) && getNativeClass(value)) {
     var description = value && value.description && String(value.description())
     var nativeClass = getNativeClass(value)
-    if (description && description[0] === '<' && description[description.length - 1] === '>') {
+    if (description && description[0] === '<' && description.indexOf('>') > 0) {
       // most of the MS* classes
-      return ctx.stylize(description, 'special')
+      return ctx.stylize(description.slice(0, description.indexOf('>') + 1), 'special')
     } else if (description) {
       // prefix the description with the class otherwise it can lead to some misunderstanding
       return ctx.stylize('<' + nativeClass + '> ' + description, 'special')

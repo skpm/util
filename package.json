@@ -1,10 +1,10 @@
 {
   "name": "@skpm/util",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A drop in replacement for the util NodeJS module",
   "main": "index.js",
   "scripts": {
-    "test": "skpm-test --enable-async --app=xcode"
+    "test": "skpm-test --app=xcode"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/skpm/util#readme",
   "devDependencies": {
-    "@skpm/test-runner": "^0.1.30"
+    "@skpm/test-runner": "^0.2.0"
   }
 }

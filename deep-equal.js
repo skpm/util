@@ -102,11 +102,10 @@ function subsetEquality(object, subset) {
     return undefined
   }
 
-  return Object.keys(subset).every(
-    key =>
-      hasOwnProperty(object, key) &&
+  return Object.keys(subset).every(function (key) {
+    return hasOwnProperty(object, key) &&
       equals(object[key], subset[key], [iterableEquality, subsetEquality])
-  )
+  })
 }
 
 // Extracted out of jasmine 2.5.2
