@@ -460,7 +460,7 @@ function formatPrimitive(fn, value, ctx) {
         // eslint-disable-next-line max-len, node-core/no-unescaped-regexp-dot
         readableRegExps[divisor] = new RegExp(`(.|\\n){1,${divisor}}(\\s|$)|(\\n|.)+?(\\s|$)`, 'gm');
       }
-      var indent = new Array(ctx.indentationLvl).reduce(function(prev) { return prev + ' '}, '');
+      var indent = getIndentation(ctx.indentationLvl);
       var matches = value.match(readableRegExps[divisor]);
       if (matches.length > 1) {
         res += fn(strEscape(matches[0]), 'string') + ' +\n';
@@ -553,11 +553,15 @@ function removeColors(str) {
   return str.replace(colorRegExp, '');
 }
 
+function getIndentation(indentationLvl) {
+  return Array.apply(null, Array(indentationLvl)).reduce(function(prev) { return prev + ' '}, '')
+}
+
 function reduceToSingleString(ctx, output, base, braces, addLn) {
   var breakLength = ctx.breakLength;
   var i = 0;
   if (ctx.compact === false) {
-    var indentation = new Array(ctx.indentationLvl).reduce(function(prev) { return prev + ' '}, '');
+    var indentation = getIndentation(ctx.indentationLvl);
     var res = (base ? (base + ' ') : '') + braces[0] + '\n' + indentation + '  ';
     for (; i < output.length - 1; i++) {
       res += output[i] + ',\n' + indentation + '  ';
@@ -578,11 +582,14 @@ function reduceToSingleString(ctx, output, base, braces, addLn) {
       return braces[0] + (base ? (' ' + base) : '') + ' ' + output.join(', ') + ' ' +
         braces[1];
   }
+
+  var indentation = getIndentation(ctx.indentationLvl);
+
   // If the opening "brace" is too large, like in the case of "Set {",
   // we need to force the first item to be on the next line or the
   // items will not line up correctly.
-  var indentation = new Array(ctx.indentationLvl).reduce(function(prev) { return prev + ' '}, '');
   var extraLn = addLn === true ? ('\n' + indentation) : '';
+
   var ln = base === '' && braces[0].length === 1 ?
     ' ' : ((base ? (' ' + base) : base) + '\n' + indentation + '  ');
   var str = output.join(',\n' + indentation + '  ');
