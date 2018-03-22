@@ -438,8 +438,9 @@ function strEscape(str) {
 }
 
 function formatPrimitive(fn, value, ctx) {
-  if (isUndefined(value))
+  if (isUndefined(value)) {
     return fn('undefined', 'undefined');
+  }
   if (isString(value)) {
     if (ctx.compact === false &&
       value.length > MIN_LINE_LENGTH &&
@@ -473,12 +474,15 @@ function formatPrimitive(fn, value, ctx) {
     }
     return fn(strEscape(value), 'string');
   }
-  if (isNumber(value))
+  if (isNumber(value)) {
     return formatNumber(fn, Number(value));
-  if (isBoolean(value))
+  }
+  if (isBoolean(value)) {
     return fn('' + value, 'boolean');
-  if (isNull(value))
+  }
+  if (isNull(value)) {
     return fn('null', 'null');
+  }
 }
 
 
@@ -669,7 +673,7 @@ function isSymbol(arg) {
 exports.isSymbol = isSymbol;
 
 function isUndefined(arg) {
-  return typeof arg === undefined;
+  return typeof arg === 'undefined';
 }
 exports.isUndefined = isUndefined;
 

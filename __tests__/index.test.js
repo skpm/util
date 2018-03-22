@@ -10,6 +10,8 @@ test('should format a string', () => {
 
 test('should inspect', (context, document) => {
   expect(util.inspect(1)).toBe('1')
+  expect(util.inspect(undefined)).toBe('undefined')
+  expect(util.inspect(null)).toBe('null')
   expect(util.inspect('hello')).toBe("'hello'")
   expect(util.inspect(['hello'])).toBe("[ 'hello' ]")
   expect(util.inspect({a: 'hello'})).toBe("{ a: 'hello' }")
