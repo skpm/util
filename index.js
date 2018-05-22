@@ -276,6 +276,18 @@ function formatValue(ctx, value, recurseTimes, ln) {
     } catch (err) {}
   }
 
+  var base = '';
+  var formatter = formatObject;
+  var braces = ['{', '}'];
+  var noIterator = true;
+  var raw;
+
+  // if it's a MOStruct, we need to catch it early so that it doesn't fail
+  if (getNativeClass(value) === 'MOStruct') {
+    braces = [value.name() + ' {', '}']
+    value = toObject(value)
+  }
+
   if (value && value._isWrappedObject) {
     value = value.toJSON()
   }
@@ -292,12 +304,6 @@ function formatValue(ctx, value, recurseTimes, ln) {
 
   var constructor = getIdentificationOf(value);
   var prefix = constructor ? (constructor + ' ') : '';
-
-  var base = '';
-  var formatter = formatObject;
-  var braces = ['{', '}'];
-  var noIterator = true;
-  var raw;
 
   if (isArray(value)) {
     noIterator = false
@@ -345,7 +351,7 @@ function formatValue(ctx, value, recurseTimes, ln) {
     } else {
       return ctx.stylize('<' + getNativeClass(value) + '>', 'special')
     }
-  } else  if (isObject(value) && getNativeClass(value)) {
+  } else if (isObject(value) && getNativeClass(value)) {
     braces = [prefix + '{', '}'];
   }
 
@@ -693,15 +699,14 @@ function isObject(arg) {
 exports.isObject = isObject;
 
 function toObject(obj) {
-  if (typeof obj === 'object') {
-    return obj
-  }
   var type = getNativeClass(obj)
   if (type === 'MOStruct') {
     return obj.memberNames().reduce(function(prev, k) {
-      prev[k] = value[k]
+      prev[k] = obj[k]
       return prev
     }, {})
+  } else if (typeof obj === 'object') {
+    return obj
   }
   return Object(obj)
 }
