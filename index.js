@@ -312,15 +312,15 @@ function formatValue(ctx, value, recurseTimes, ln) {
     if (value.length === 0 && keyLength === 0)
       return braces[0] + ']';
     formatter = formatArray;
+  } else if (isFunction(value)) {
+    var name = (constructor === 'Object' ? 'function MOMethod' : constructor) + (value.name ? (': ' + value.name) : '');
+    if (keyLength === 0)
+      return ctx.stylize(`[${name}]`, 'special');
+    base = '[' + name + ']';
   } else if (prefix === 'Object ') {
     // Object fast path
     if (keyLength === 0)
       return '{}';
-  } else if (isFunction(value)) {
-    var name = constructor + (value.name ? (': ' + value.name) : '');
-    if (keyLength === 0)
-      return ctx.stylize(`[${name}]`, 'special');
-    base = '[' + name + ']';
   } else if (isRegExp(value)) {
     // Make RegExps say that they are RegExps
     if (keyLength === 0 || recurseTimes < 0)
@@ -724,7 +724,7 @@ function isError(e) {
 exports.isError = isError;
 
 function isFunction(arg) {
-  return typeof arg === 'function';
+  return typeof arg === 'function' || arg instanceof MOMethod;
 }
 exports.isFunction = isFunction;
 

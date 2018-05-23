@@ -9,6 +9,7 @@ test('should format a string', () => {
 })
 
 test('should inspect', (context, document) => {
+  expect(util.inspect(coscript.hasFunctionNamed)).toBe('[function MOMethod]')
   expect(util.inspect(1)).toBe('1')
   expect(util.inspect(undefined)).toBe('undefined')
   expect(util.inspect(null)).toBe('null')
