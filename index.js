@@ -289,7 +289,18 @@ function formatValue(ctx, value, recurseTimes, ln) {
   }
 
   if (value && value._isWrappedObject) {
-    value = value.toJSON({depth: recurseTimes})
+    const propertyList = value.constructor._DefinedPropertiesKey
+    const json = {}
+    Object.keys(propertyList).forEach(k => {
+      if (!propertyList[k].exportable) {
+        return
+      }
+      json[k] = value[k]
+      if (json[k] && !json[k]._isWrappedObject && json[k].toJSON) {
+        json[k] = json[k].toJSON()
+      }
+    })
+    value = json
   }
 
   var keys;
