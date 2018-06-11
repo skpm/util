@@ -289,7 +289,7 @@ function formatValue(ctx, value, recurseTimes, ln) {
   }
 
   if (value && value._isWrappedObject) {
-    value = value.toJSON()
+    value = value.toJSON({depth: recurseTimes})
   }
 
   var keys;
