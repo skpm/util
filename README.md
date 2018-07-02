@@ -2,7 +2,8 @@
 
 All the [util nodejs fs](https://nodejs.org/api/util.html) API is available.
 
-Additionally, 2 more methods are available:
-- `toArray`
-- `toObject`
-which cast assimilated arrays (`NSArray`) and objects (`NSDictionary`) to a proper JS array and object respectively.
+Additionally, 3 more methods are available:
+
+- `toArray`: cast assimilated arrays (`NSArray`) to a proper JS array
+- `toObject`: cast assimilated objects (`NSDictionary`) to a proper JS object
+- `toJSObject`: cast any object or primitive into its proper JS counterpart
