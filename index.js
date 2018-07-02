@@ -495,7 +495,7 @@ function formatPrimitive(fn, value, ctx) {
     return formatNumber(fn, Number(value));
   }
   if (isBoolean(value)) {
-    return fn('' + value, 'boolean');
+    return fn('' + Boolean(Number(value)), 'boolean');
   }
   if (isNull(value)) {
     return fn('null', 'null');
