@@ -649,7 +649,7 @@ function toJSObject(arg) {
   }
   return arg
 }
-exports.asJSObject = toJSObject
+exports.toJSObject = toJSObject
 
 var assimilatedArrays = ['NSArray', 'NSMutableArray', '__NSArrayM', '__NSSingleObjectArrayI', '__NSArray0']
 function isArray(ar) {
