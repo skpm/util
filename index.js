@@ -649,8 +649,13 @@ function toArray(object) {
 }
 exports.toArray = toArray;
 
+var assimilatedNumbers = ['__NSCFBoolean']
 function isBoolean(arg) {
-  return typeof arg === 'boolean';
+  if (typeof arg === 'boolean') {
+    return true
+  }
+  var type = getNativeClass(arg)
+  return assimilatedBooleans.indexOf(type) !== -1
 }
 exports.isBoolean = isBoolean;
 
