@@ -673,7 +673,7 @@ function toArray(object) {
 }
 exports.toArray = toArray;
 
-var assimilatedNumbers = ['__NSCFBoolean']
+var assimilatedBooleans = ['__NSCFBoolean']
 function isBoolean(arg) {
   if (typeof arg === 'boolean') {
     return true
