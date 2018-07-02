@@ -626,6 +626,30 @@ function getNativeClass(arg) {
   }
 }
 
+/**
+ * Coerce common NSObjects to their JS counterparts
+ * @param arg Any object
+ *
+ * Converts NSDictionary, NSArray, NSStirng, and NSNumber to
+ * native JS equivilents.
+ */
+function toJSObject(arg) {
+  if (arg) {
+    if (isObject(arg)) {
+      return toObject(arg)
+    } else if (isArray(arg)) {
+      return toArray(arg)
+    } else if (isString(arg)) {
+      return String(arg)
+    } else if (isNumber(arg)) {
+      return Number(arg)
+    } else if (isBoolean(arg)) {
+      return Boolean(Number(arg))
+    }
+  }
+  return arg
+}
+exports.toJSObject = toJSObject
 
 var assimilatedArrays = ['NSArray', 'NSMutableArray', '__NSArrayM', '__NSSingleObjectArrayI', '__NSArray0']
 function isArray(ar) {
@@ -649,7 +673,7 @@ function toArray(object) {
 }
 exports.toArray = toArray;
 
-var assimilatedNumbers = ['__NSCFBoolean']
+var assimilatedBooleans = ['__NSCFBoolean']
 function isBoolean(arg) {
   if (typeof arg === 'boolean') {
     return true
