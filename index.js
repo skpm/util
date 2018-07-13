@@ -625,6 +625,12 @@ function getNativeClass(arg) {
     return undefined
   }
 }
+export.getNativeClass = getNativeClass
+
+function isNativeObject(arg) {
+  return !!getNativeClass(arg)
+}
+export.isNativeObject = isNativeObject
 
 /**
  * Coerce common NSObjects to their JS counterparts
@@ -651,7 +657,7 @@ function toJSObject(arg) {
 }
 exports.toJSObject = toJSObject
 
-var assimilatedArrays = ['NSArray', 'NSMutableArray', '__NSArrayM', '__NSSingleObjectArrayI', '__NSArray0']
+var assimilatedArrays = ['NSArray', 'NSMutableArray', '__NSArrayM', '__NSSingleObjectArrayI', '__NSArray0', '__NSArrayI']
 function isArray(ar) {
   if (Array.isArray(ar)) {
     return true
@@ -728,7 +734,7 @@ function isRegExp(re) {
 }
 exports.isRegExp = isRegExp;
 
-var assimilatedObjects = ['NSDictionary', '__NSDictionaryM', '__NSSingleEntryDictionaryI', '__NSDictionaryI', '__NSCFDictionary', 'MOStruct']
+var assimilatedObjects = ['NSDictionary', '__NSDictionaryM', '__NSSingleEntryDictionaryI', '__NSDictionaryI', '__NSCFDictionary', 'MOStruct', '__NSFrozenDictionaryM']
 function isObject(arg) {
   var type = getNativeClass(arg)
   if (typeof arg === 'object' && arg !== null && !type) {
