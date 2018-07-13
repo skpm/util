@@ -625,12 +625,12 @@ function getNativeClass(arg) {
     return undefined
   }
 }
-export.getNativeClass = getNativeClass
+exports.getNativeClass = getNativeClass
 
 function isNativeObject(arg) {
   return !!getNativeClass(arg)
 }
-export.isNativeObject = isNativeObject
+exports.isNativeObject = isNativeObject
 
 /**
  * Coerce common NSObjects to their JS counterparts
