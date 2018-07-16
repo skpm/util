@@ -517,7 +517,7 @@ function formatArray(ctx, value, recurseTimes, keys) {
   var remaining = valLen - len;
   var output = new Array(len + (remaining > 0 ? 1 : 0) + hidden);
   for (var i = 0; i < len; i++)
-    output[i] = formatProperty(ctx, value, recurseTimes, keys[i], 1);
+    output[i] = formatProperty(ctx, value, recurseTimes, keys[i] || i, 1);
   if (remaining > 0)
     output[i++] = '... ' + remaining + ' more item' + (remaining > 1 ? 's' : '');
   if (ctx.showHidden === true)
