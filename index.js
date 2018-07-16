@@ -657,7 +657,7 @@ function toJSObject(arg) {
 }
 exports.toJSObject = toJSObject
 
-var assimilatedArrays = ['NSArray', 'NSMutableArray', '__NSArrayM', '__NSSingleObjectArrayI', '__NSArray0', '__NSArrayI']
+var assimilatedArrays = ['NSArray', 'NSMutableArray', '__NSArrayM', '__NSSingleObjectArrayI', '__NSArray0', '__NSArrayI', '__NSArrayReversed', '__NSCFArray', '__NSPlaceholderArray']
 function isArray(ar) {
   if (Array.isArray(ar)) {
     return true
@@ -709,7 +709,7 @@ function isNumber(arg) {
 }
 exports.isNumber = isNumber;
 
-var assimilatedStrings = ['NSString', '__NSCFString', 'NSTaggedPointerString', '__NSCFConstantString']
+var assimilatedStrings = ['NSString', 'NSMutableString', '__NSCFString', 'NSTaggedPointerString', '__NSCFConstantString']
 function isString(arg) {
   if (typeof arg === 'string') {
     return true
@@ -734,7 +734,7 @@ function isRegExp(re) {
 }
 exports.isRegExp = isRegExp;
 
-var assimilatedObjects = ['NSDictionary', '__NSDictionaryM', '__NSSingleEntryDictionaryI', '__NSDictionaryI', '__NSCFDictionary', 'MOStruct', '__NSFrozenDictionaryM']
+var assimilatedObjects = ['NSDictionary', 'NSMutableDictionary', '__NSDictionaryM', '__NSSingleEntryDictionaryI', '__NSDictionaryI', '__NSCFDictionary', 'MOStruct', '__NSFrozenDictionaryM', '__NSDictionary0', '__NSPlaceholderDictionary']
 function isObject(arg) {
   var type = getNativeClass(arg)
   if (typeof arg === 'object' && arg !== null && !type) {
