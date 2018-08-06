@@ -638,6 +638,8 @@ exports.isNativeObject = isNativeObject
  *
  * Converts NSDictionary, NSArray, NSStirng, and NSNumber to
  * native JS equivilents.
+ *
+ * Note that NSDictionary and NSArray elements are not recursively converted
  */
 function toJSObject(arg) {
   if (arg) {
