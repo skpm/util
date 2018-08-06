@@ -517,7 +517,7 @@ function formatArray(ctx, value, recurseTimes, keys) {
   var remaining = valLen - len;
   var output = new Array(len + (remaining > 0 ? 1 : 0) + hidden);
   for (var i = 0; i < len; i++)
-    output[i] = formatProperty(ctx, value, recurseTimes, keys[i], 1);
+    output[i] = formatProperty(ctx, value, recurseTimes, keys[i] || i, 1);
   if (remaining > 0)
     output[i++] = '... ' + remaining + ' more item' + (remaining > 1 ? 's' : '');
   if (ctx.showHidden === true)
@@ -625,6 +625,12 @@ function getNativeClass(arg) {
     return undefined
   }
 }
+exports.getNativeClass = getNativeClass
+
+function isNativeObject(arg) {
+  return !!getNativeClass(arg)
+}
+exports.isNativeObject = isNativeObject
 
 /**
  * Coerce common NSObjects to their JS counterparts
@@ -651,7 +657,7 @@ function toJSObject(arg) {
 }
 exports.toJSObject = toJSObject
 
-var assimilatedArrays = ['NSArray', 'NSMutableArray', '__NSArrayM', '__NSSingleObjectArrayI', '__NSArray0']
+var assimilatedArrays = ['NSArray', 'NSMutableArray', '__NSArrayM', '__NSSingleObjectArrayI', '__NSArray0', '__NSArrayI', '__NSArrayReversed', '__NSCFArray', '__NSPlaceholderArray']
 function isArray(ar) {
   if (Array.isArray(ar)) {
     return true
@@ -703,7 +709,7 @@ function isNumber(arg) {
 }
 exports.isNumber = isNumber;
 
-var assimilatedStrings = ['NSString', '__NSCFString', 'NSTaggedPointerString', '__NSCFConstantString']
+var assimilatedStrings = ['NSString', 'NSMutableString', '__NSCFString', 'NSTaggedPointerString', '__NSCFConstantString']
 function isString(arg) {
   if (typeof arg === 'string') {
     return true
@@ -728,7 +734,7 @@ function isRegExp(re) {
 }
 exports.isRegExp = isRegExp;
 
-var assimilatedObjects = ['NSDictionary', '__NSDictionaryM', '__NSSingleEntryDictionaryI', '__NSDictionaryI', '__NSCFDictionary', 'MOStruct']
+var assimilatedObjects = ['NSDictionary', 'NSMutableDictionary', '__NSDictionaryM', '__NSSingleEntryDictionaryI', '__NSDictionaryI', '__NSCFDictionary', 'MOStruct', '__NSFrozenDictionaryM', '__NSDictionary0', '__NSPlaceholderDictionary']
 function isObject(arg) {
   var type = getNativeClass(arg)
   if (typeof arg === 'object' && arg !== null && !type) {
