@@ -636,7 +636,7 @@ exports.isNativeObject = isNativeObject
  * Coerce common NSObjects to their JS counterparts
  * @param arg Any object
  *
- * Converts NSDictionary, NSArray, NSStirng, and NSNumber to
+ * Converts NSDictionary, NSArray, NSString, and NSNumber to
  * native JS equivilents.
  */
 function toJSObject(arg) {
