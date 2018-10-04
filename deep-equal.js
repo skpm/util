@@ -29,7 +29,9 @@ function iterableEquality(a, b) {
     typeof a !== 'object' ||
     typeof b !== 'object' ||
     Array.isArray(a) ||
-    Array.isArray(b)
+    Array.isArray(b) ||
+    a === null ||
+    b === null
   ) {
     return undefined
   }
