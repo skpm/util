@@ -690,6 +690,12 @@ function isBoolean(arg) {
   return assimilatedBooleans.indexOf(type) !== -1
 }
 exports.isBoolean = isBoolean;
+exports.toBoolean = function toBoolean(arg) {
+  if (typeof arg === 'boolean') {
+    return arg
+  }
+  return Boolean(Number(arg))
+}
 
 function isNull(arg) {
   return arg === null;
@@ -711,7 +717,7 @@ function isNumber(arg) {
 }
 exports.isNumber = isNumber;
 
-var assimilatedStrings = ['NSString', 'NSMutableString', '__NSCFString', 'NSTaggedPointerString', '__NSCFConstantString']
+var assimilatedStrings = ['NSString', 'NSMutableString', '__NSCFString', 'NSTaggedPointerString', '__NSCFConstantString', 'NSDebugString', 'NSPinyinString', 'NSSimpleCString', 'NSLocalizableString', 'NSPlaceholderString', '__NSLocalizedString', 'NSConstantString', 'NSBigMutableString', 'NSCheapMutableString', '__NSVariableWidthString', 'NSPlaceholderMutableString', 'NSPathStore2']
 function isString(arg) {
   if (typeof arg === 'string') {
     return true
