@@ -19,6 +19,45 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+var casting = require('./casting')
+var getNativeClass = casting.getNativeClass
+var isArray = casting.isArray
+var toArray = casting.toArray
+var isBoolean = casting.isBoolean
+var isNull = casting.isNull
+var isNumber = casting.isNumber
+var isString = casting.isString
+var isUndefined = casting.isUndefined
+var isRegExp = casting.isRegExp
+var isObject = casting.isObject
+var toObject = casting.toObject
+var isDate = casting.isDate
+var isError = casting.isError
+var isFunction = casting.isFunction
+var isPrimitive = casting.isPrimitive
+
+exports.getNativeClass = getNativeClass
+exports.isNativeObject = casting.isNativeObject
+exports.toJSObject = casting.toJSObject
+exports.isArray = isArray
+exports.toArray = toArray
+exports.isBoolean = isBoolean
+exports.toBoolean = casting.toBoolean
+exports.isNull = casting.isNull
+exports.isNullOrUndefined = casting.isNullOrUndefined
+exports.isNumber = isNumber
+exports.isString = isString
+exports.isSymbol = casting.isSymbol
+exports.isUndefined = isUndefined
+exports.isRegExp = isRegExp
+exports.isObject = isObject
+exports.toObject = toObject
+exports.isDate = isDate
+exports.isError = isError
+exports.isFunction = isFunction
+exports.isPrimitive = isPrimitive
+exports.isBuffer = casting.isBuffer
+
 exports.callbackify = require('./callbackify')
 
 var debugs = {};
@@ -615,192 +654,6 @@ function reduceToSingleString(ctx, output, base, braces, addLn) {
     ' ' : ((base ? (' ' + base) : base) + '\n' + indentation + '  ');
   var str = output.join(',\n' + indentation + '  ');
   return extraLn + braces[0] + ln + str + ' ' + braces[1];
-}
-
-// check if the argument is a native sketch object
-function getNativeClass(arg) {
-  try {
-    return arg && arg.isKindOfClass && typeof arg.class === 'function' && String(arg.class())
-  } catch (err) {
-    return undefined
-  }
-}
-exports.getNativeClass = getNativeClass
-
-function isNativeObject(arg) {
-  return !!getNativeClass(arg)
-}
-exports.isNativeObject = isNativeObject
-
-/**
- * Coerce common NSObjects to their JS counterparts
- * @param arg Any object
- *
- * Converts NSDictionary, NSArray, NSString, and NSNumber to
- * native JS equivilents.
- *
- * Note that NSDictionary and NSArray elements are not recursively converted
- */
-function toJSObject(arg) {
-  if (arg) {
-    if (isObject(arg)) {
-      return toObject(arg)
-    } else if (isArray(arg)) {
-      return toArray(arg)
-    } else if (isString(arg)) {
-      return String(arg)
-    } else if (isNumber(arg)) {
-      return Number(arg)
-    } else if (isBoolean(arg)) {
-      return Boolean(Number(arg))
-    }
-  }
-  return arg
-}
-exports.toJSObject = toJSObject
-
-var assimilatedArrays = ['NSArray', 'NSMutableArray', '__NSArrayM', '__NSSingleObjectArrayI', '__NSArray0', '__NSArrayI', '__NSArrayReversed', '__NSCFArray', '__NSPlaceholderArray']
-function isArray(ar) {
-  if (Array.isArray(ar)) {
-    return true
-  }
-  var type = getNativeClass(ar)
-  return assimilatedArrays.indexOf(type) !== -1
-}
-exports.isArray = isArray;
-
-function toArray(object) {
-  if (Array.isArray(object)) {
-    return object
-  }
-  var arr = []
-  for (var j = 0; j < (object || []).length; j += 1) {
-    arr.push(object[j])
-  }
-  return arr
-}
-exports.toArray = toArray;
-
-var assimilatedBooleans = ['__NSCFBoolean']
-function isBoolean(arg) {
-  if (typeof arg === 'boolean') {
-    return true
-  }
-  var type = getNativeClass(arg)
-  return assimilatedBooleans.indexOf(type) !== -1
-}
-exports.isBoolean = isBoolean;
-exports.toBoolean = function toBoolean(arg) {
-  if (typeof arg === 'boolean') {
-    return arg
-  }
-  return Boolean(Number(arg))
-}
-
-function isNull(arg) {
-  return arg === null;
-}
-exports.isNull = isNull;
-
-function isNullOrUndefined(arg) {
-  return arg == null;
-}
-exports.isNullOrUndefined = isNullOrUndefined;
-
-var assimilatedNumbers = ['__NSCFNumber', 'NSNumber']
-function isNumber(arg) {
-  if (typeof arg === 'number') {
-    return true
-  }
-  var type = getNativeClass(arg)
-  return assimilatedNumbers.indexOf(type) !== -1
-}
-exports.isNumber = isNumber;
-
-var assimilatedStrings = ['NSString', 'NSMutableString', '__NSCFString', 'NSTaggedPointerString', '__NSCFConstantString', 'NSDebugString', 'NSPinyinString', 'NSSimpleCString', 'NSLocalizableString', 'NSPlaceholderString', '__NSLocalizedString', 'NSConstantString', 'NSBigMutableString', 'NSCheapMutableString', '__NSVariableWidthString', 'NSPlaceholderMutableString', 'NSPathStore2']
-function isString(arg) {
-  if (typeof arg === 'string') {
-    return true
-  }
-  var type = getNativeClass(arg)
-  return assimilatedStrings.indexOf(type) !== -1
-}
-exports.isString = isString;
-
-function isSymbol(arg) {
-  return typeof arg === 'symbol';
-}
-exports.isSymbol = isSymbol;
-
-function isUndefined(arg) {
-  return typeof arg === 'undefined';
-}
-exports.isUndefined = isUndefined;
-
-function isRegExp(re) {
-  return isObject(re) && objectToString(re) === '[object RegExp]';
-}
-exports.isRegExp = isRegExp;
-
-var assimilatedObjects = ['NSDictionary', 'NSMutableDictionary', '__NSDictionaryM', '__NSSingleEntryDictionaryI', '__NSDictionaryI', '__NSCFDictionary', 'MOStruct', '__NSFrozenDictionaryM', '__NSDictionary0', '__NSPlaceholderDictionary']
-function isObject(arg) {
-  var type = getNativeClass(arg)
-  if (typeof arg === 'object' && arg !== null && !type) {
-    return true
-  }
-  return assimilatedObjects.indexOf(type) !== -1
-}
-exports.isObject = isObject;
-
-function toObject(obj) {
-  var type = getNativeClass(obj)
-  if (type === 'MOStruct') {
-    return obj.memberNames().reduce(function(prev, k) {
-      prev[k] = obj[k]
-      return prev
-    }, {})
-  } else if (typeof obj === 'object') {
-    return obj
-  }
-  return Object(obj)
-}
-exports.toObject = toObject;
-
-function isDate(d) {
-  return isObject(d) && objectToString(d) === '[object Date]';
-}
-exports.isDate = isDate;
-
-function isError(e) {
-  return isObject(e) &&
-      (objectToString(e) === '[object Error]' || e instanceof Error);
-}
-exports.isError = isError;
-
-function isFunction(arg) {
-  return typeof arg === 'function' || arg instanceof MOMethod;
-}
-exports.isFunction = isFunction;
-
-function isPrimitive(arg) {
-  return isNull(arg) ||
-         isBoolean(arg) ||
-         isNumber(arg) ||
-         isString(arg) ||
-         isSymbol(arg) ||
-         isUndefined(arg);
-}
-exports.isPrimitive = isPrimitive;
-
-exports.isBuffer = function isBuffer(arg) {
-  return arg && typeof arg === 'object'
-    && typeof arg.copy === 'function'
-    && typeof arg.fill === 'function'
-    && typeof arg.readUInt8 === 'function';
-};
-
-function objectToString(o) {
-  return Object.prototype.toString.call(o);
 }
 
 exports.isDeepStrictEqual = require('./deep-equal')
