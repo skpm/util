@@ -1,6 +1,6 @@
 {
   "name": "@skpm/util",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "description": "A drop in replacement for the util NodeJS module",
   "main": "index.js",
   "scripts": {

@@ -37,17 +37,29 @@ var isFunction = casting.isFunction
 var isPrimitive = casting.isPrimitive
 
 exports.getNativeClass = getNativeClass
-exports.isNativeObject = casting.isNativeObject
-exports.toJSObject = casting.toJSObject
+exports.isNativeObject = function (arg) {
+  return casting.isNativeObject(arg)
+}
+exports.toJSObject = function (arg, options) {
+  return casting.toJSObject(arg, options)
+}
 exports.isArray = isArray
 exports.toArray = toArray
 exports.isBoolean = isBoolean
-exports.toBoolean = casting.toBoolean
-exports.isNull = casting.isNull
-exports.isNullOrUndefined = casting.isNullOrUndefined
+exports.toBoolean = function (arg) {
+  return casting.toBoolean(arg)
+}
+exports.isNull = function (arg) {
+  return casting.isNull(arg)
+}
+exports.isNullOrUndefined = function (arg) {
+  return casting.isNullOrUndefined(arg)
+}
 exports.isNumber = isNumber
 exports.isString = isString
-exports.isSymbol = casting.isSymbol
+exports.isSymbol = function (arg) {
+  return casting.isSymbol(arg)
+}
 exports.isUndefined = isUndefined
 exports.isRegExp = isRegExp
 exports.isObject = isObject
@@ -56,7 +68,9 @@ exports.isDate = isDate
 exports.isError = isError
 exports.isFunction = isFunction
 exports.isPrimitive = isPrimitive
-exports.isBuffer = casting.isBuffer
+exports.isBuffer = function (arg) {
+  return casting.isBuffer(arg)
+}
 
 exports.callbackify = require('./callbackify')
 
