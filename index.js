@@ -24,7 +24,6 @@ var getNativeClass = casting.getNativeClass
 var isArray = casting.isArray
 var toArray = casting.toArray
 var isBoolean = casting.isBoolean
-var isNull = casting.isNull
 var isNumber = casting.isNumber
 var isString = casting.isString
 var isUndefined = casting.isUndefined
@@ -36,30 +35,23 @@ var isError = casting.isError
 var isFunction = casting.isFunction
 var isPrimitive = casting.isPrimitive
 
+// we need to duplicate the method cause cocoascript is angry otherwise
+function isNull(arg) {
+  return arg === null;
+}
+
 exports.getNativeClass = getNativeClass
-exports.isNativeObject = function (arg) {
-  return casting.isNativeObject(arg)
-}
-exports.toJSObject = function (arg, options) {
-  return casting.toJSObject(arg, options)
-}
+exports.isNativeObject = casting.isNativeObject
+exports.toJSObject = casting.toJSObject
 exports.isArray = isArray
 exports.toArray = toArray
 exports.isBoolean = isBoolean
-exports.toBoolean = function (arg) {
-  return casting.toBoolean(arg)
-}
-exports.isNull = function (arg) {
-  return casting.isNull(arg)
-}
-exports.isNullOrUndefined = function (arg) {
-  return casting.isNullOrUndefined(arg)
-}
+exports.toBoolean = casting.toBoolean
+exports.isNull = casting.isNull
+exports.isNullOrUndefined = casting.isNullOrUndefined
 exports.isNumber = isNumber
 exports.isString = isString
-exports.isSymbol = function (arg) {
-  return casting.isSymbol(arg)
-}
+exports.isSymbol = casting.isSymbol
 exports.isUndefined = isUndefined
 exports.isRegExp = isRegExp
 exports.isObject = isObject
@@ -68,9 +60,7 @@ exports.isDate = isDate
 exports.isError = isError
 exports.isFunction = isFunction
 exports.isPrimitive = isPrimitive
-exports.isBuffer = function (arg) {
-  return casting.isBuffer(arg)
-}
+exports.isBuffer = casting.isBuffer
 
 exports.callbackify = require('./callbackify')
 
