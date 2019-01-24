@@ -1,3 +1,4 @@
+var { toArray } = require('./casting')
 var customPromisify = 'promisify'
 
 function promisify(fn) {
