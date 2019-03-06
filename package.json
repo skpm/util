@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/skpm/util#readme",
   "devDependencies": {
-    "@skpm/test-runner": "^0.3.6"
+    "@skpm/test-runner": "^0.3.13"
   }
 }
