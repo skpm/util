@@ -24,7 +24,7 @@ test('should coerce ns to js', (context, document) => {
   let dict = NSMutableDictionary.new()
   dict.setObject_forKey(NSString.alloc().initWithString("a string"), "str")
   dict.setObject_forKey(NSNumber.numberWithInteger(5), "num")
-  obj = util.toJSObject(dict)
+  let obj = util.toJSObject(dict)
   // Nested objects are not converted
   expect(Number(obj["str"].isKindOfClass(NSString))).toEqual(1)
   expect(typeof obj["num"]).toBe("object")
