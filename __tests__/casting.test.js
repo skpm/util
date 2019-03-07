@@ -32,3 +32,11 @@ test('should coerce ns to js', (context, document) => {
   const point = CGPointMake(1, 2)
   expect(util.toJSObject(point, {recurse: true})).toEqual({x: 1, y: 2})
 })
+
+test('should properly cast an NSDictionary with weird keys', () => {
+  const dict = NSMutableDictionary.new()
+  dict.setObject_forKey(1, 'hash')
+  dict.setObject_forKey(2, 'other')
+
+  expect(util.toJSObject(dict, {recurse: true})).toEqual({hash: 1, other: 2})
+})

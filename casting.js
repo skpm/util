@@ -152,6 +152,12 @@ function toObject(obj) {
       prev[k] = obj[k]
       return prev
     }, {})
+  } else if (isNativeObject(obj) && typeof obj.objectForKey === 'function') {
+    var res = {}
+    Object.keys(obj).forEach(function (key) {
+      res[key] = obj.objectForKey(key)
+    })
+    return res
   } else if (typeof obj === 'object') {
     return obj
   }
