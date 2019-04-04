@@ -26,276 +26,278 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 function iterableEquality(a, b) {
   if (
-    typeof a !== 'object' ||
-    typeof b !== 'object' ||
+    typeof a !== "object" ||
+    typeof b !== "object" ||
     Array.isArray(a) ||
     Array.isArray(b) ||
     a === null ||
     b === null
   ) {
-    return undefined
+    return undefined;
   }
   if (a && b && a.constructor !== b.constructor) {
     // check if the object are natives and then shallow equal them
-    return a.sketchObject && b.sketchObject && a.sketchObject == b.sketchObject
+    return a.sketchObject && b.sketchObject && a.sketchObject == b.sketchObject;
   }
 
   if (a.size !== undefined) {
     if (a.size !== b.size) {
-      return false
-    } else if (isA('Set', a)) {
-      var allFound = true
+      return false;
+    } else if (isA("Set", a)) {
+      var allFound = true;
       for (var aValue of a) {
         if (!b.has(aValue)) {
-          allFound = false
-          break
+          allFound = false;
+          break;
         }
       }
       if (allFound) {
-        return true
+        return true;
       }
-    } else if (isA('Map', a)) {
-      var allFound = true
+    } else if (isA("Map", a)) {
+      var allFound = true;
       for (var aEntry of a) {
         if (
           !b.has(aEntry[0]) ||
           !equals(aEntry[1], b.get(aEntry[0]), [iterableEquality])
         ) {
-          allFound = false
-          break
+          allFound = false;
+          break;
         }
       }
       if (allFound) {
-        return true
+        return true;
       }
     }
   }
 
   if (Object.keys(a).length !== Object.keys(a).length) {
-    return false
+    return false;
   }
 
-  var aKeys = Object.keys(a).sort()
-  var bKeys = Object.keys(b).sort()
+  var aKeys = Object.keys(a).sort();
+  var bKeys = Object.keys(b).sort();
 
   for (var i = 0; i < aKeys.length; i += 1) {
-    var aKey = aKeys[i]
-    var bKey = bKeys[i]
+    var aKey = aKeys[i];
+    var bKey = bKeys[i];
     if (aKey !== bKey || !equals(a[aKey], b[bKey], [iterableEquality])) {
-      return false
+      return false;
     }
   }
 
-  return true
+  return true;
 }
 
 function isObjectWithKeys(a) {
   return (
     a !== null &&
-    typeof a === 'object' &&
+    typeof a === "object" &&
     !(a instanceof Error) &&
     !(a instanceof Array) &&
     !(a instanceof Date)
-  )
+  );
 }
 
 function subsetEquality(object, subset) {
   if (!isObjectWithKeys(object) || !isObjectWithKeys(subset)) {
-    return undefined
+    return undefined;
   }
 
-  return Object.keys(subset).every(function (key) {
-    return hasOwnProperty(object, key) &&
+  return Object.keys(subset).every(function(key) {
+    return (
+      hasOwnProperty(object, key) &&
       equals(object[key], subset[key], [iterableEquality, subsetEquality])
-  })
+    );
+  });
 }
 
 // Extracted out of jasmine 2.5.2
 function equals(a, b, customTesters) {
-  customTesters = customTesters || [iterableEquality]
-  return eq(a, b, [], [], customTesters)
+  customTesters = customTesters || [iterableEquality];
+  return eq(a, b, [], [], customTesters);
 }
 
 function isAsymmetric(obj) {
-  return obj && isA('Function', obj.asymmetricMatch)
+  return obj && isA("Function", obj.asymmetricMatch);
 }
 
 function asymmetricMatch(a, b) {
   var asymmetricA = isAsymmetric(a),
-    asymmetricB = isAsymmetric(b)
+    asymmetricB = isAsymmetric(b);
 
   if (asymmetricA && asymmetricB) {
-    return undefined
+    return undefined;
   }
 
   if (asymmetricA) {
-    return a.asymmetricMatch(b)
+    return a.asymmetricMatch(b);
   }
 
   if (asymmetricB) {
-    return b.asymmetricMatch(a)
+    return b.asymmetricMatch(a);
   }
 }
 
 // Equality function lovingly adapted from isEqual in
 //   [Underscore](http://underscorejs.org)
 function eq(a, b, aStack, bStack, customTesters) {
-  var result = true
+  var result = true;
 
-  var asymmetricResult = asymmetricMatch(a, b)
+  var asymmetricResult = asymmetricMatch(a, b);
   if (asymmetricResult !== undefined) {
-    return asymmetricResult
+    return asymmetricResult;
   }
 
   for (var i = 0; i < customTesters.length; i++) {
-    var customTesterResult = customTesters[i](a, b)
+    var customTesterResult = customTesters[i](a, b);
     if (customTesterResult !== undefined) {
-      return customTesterResult
+      return customTesterResult;
     }
   }
 
   if (a instanceof Error && b instanceof Error) {
-    return a.message == b.message
+    return a.message == b.message;
   }
 
   // Identical objects are equal. `0 === -0`, but they aren't identical.
   // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
   if (a === b) {
-    return a !== 0 || 1 / a == 1 / b
+    return a !== 0 || 1 / a == 1 / b;
   }
   // A strict comparison is necessary because `null == undefined`.
   if (a === null || b === null) {
-    return a === b
+    return a === b;
   }
-  var className = Object.prototype.toString.call(a)
+  var className = Object.prototype.toString.call(a);
   if (className != Object.prototype.toString.call(b)) {
-    return false
+    return false;
   }
   switch (className) {
     // Strings, numbers, dates, and booleans are compared by value.
-    case '[object String]':
+    case "[object String]":
       // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
       // equivalent to `new String("5")`.
-      return a == String(b)
-    case '[object Number]':
+      return a == String(b);
+    case "[object Number]":
       // `NaN`s are equivalent, but non-reflexive. An `egal` comparison is performed for
       // other numeric values.
-      return a != +a ? b != +b : a === 0 ? 1 / a == 1 / b : a == +b
-    case '[object Date]':
-    case '[object Boolean]':
+      return a != +a ? b != +b : a === 0 ? 1 / a == 1 / b : a == +b;
+    case "[object Date]":
+    case "[object Boolean]":
       // Coerce dates and booleans to numeric primitive values. Dates are compared by their
       // millisecond representations. Note that invalid dates with millisecond representations
       // of `NaN` are not equivalent.
-      return +a == +b
+      return +a == +b;
     // RegExps are compared by their source patterns and flags.
-    case '[object RegExp]':
+    case "[object RegExp]":
       return (
         a.source == b.source &&
         a.global == b.global &&
         a.multiline == b.multiline &&
         a.ignoreCase == b.ignoreCase
-      )
+      );
   }
-  if (typeof a != 'object' || typeof b != 'object') {
-    return false
+  if (typeof a != "object" || typeof b != "object") {
+    return false;
   }
 
   // Assume equality for cyclic structures. The algorithm for detecting cyclic
   // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
-  var length = aStack.length
+  var length = aStack.length;
   while (length--) {
     // Linear search. Performance is inversely proportional to the number of
     // unique nested structures.
     if (aStack[length] == a) {
-      return bStack[length] == b
+      return bStack[length] == b;
     }
   }
   // Add the first object to the stack of traversed objects.
-  aStack.push(a)
-  bStack.push(b)
-  var size = 0
+  aStack.push(a);
+  bStack.push(b);
+  var size = 0;
   // Recursively compare objects and arrays.
   // Compare array lengths to determine if a deep comparison is necessary.
-  if (className == '[object Array]') {
-    size = a.length
+  if (className == "[object Array]") {
+    size = a.length;
     if (size !== b.length) {
-      return false
+      return false;
     }
 
     while (size--) {
-      result = eq(a[size], b[size], aStack, bStack, customTesters)
+      result = eq(a[size], b[size], aStack, bStack, customTesters);
       if (!result) {
-        return false
+        return false;
       }
     }
   }
 
   // Deep compare objects.
-  var aKeys = keys(a, className == '[object Array]'),
-    key
-  size = aKeys.length
+  var aKeys = keys(a, className == "[object Array]"),
+    key;
+  size = aKeys.length;
 
   // Ensure that both objects contain the same number of properties before comparing deep equality.
-  if (keys(b, className == '[object Array]').length !== size) {
-    return false
+  if (keys(b, className == "[object Array]").length !== size) {
+    return false;
   }
 
   while (size--) {
-    key = aKeys[size]
+    key = aKeys[size];
 
     // Deep compare each member
-    result = has(b, key) && eq(a[key], b[key], aStack, bStack, customTesters)
+    result = has(b, key) && eq(a[key], b[key], aStack, bStack, customTesters);
 
     if (!result) {
-      return false
+      return false;
     }
   }
   // Remove the first object from the stack of traversed objects.
-  aStack.pop()
-  bStack.pop()
+  aStack.pop();
+  bStack.pop();
 
-  return result
+  return result;
 }
 
 function keys(obj, isArray) {
   var allKeys = (function(o) {
-    var keys = []
+    var keys = [];
     for (var key in o) {
       if (has(o, key)) {
-        keys.push(key)
+        keys.push(key);
       }
     }
-    return keys.concat(Object.getOwnPropertySymbols(o))
-  })(obj)
+    return keys.concat(Object.getOwnPropertySymbols(o));
+  })(obj);
 
   if (!isArray) {
-    return allKeys
+    return allKeys;
   }
 
-  var extraKeys = []
+  var extraKeys = [];
   if (allKeys.length === 0) {
-    return allKeys
+    return allKeys;
   }
 
   for (var x = 0; x < allKeys.length; x++) {
     if (!allKeys[x].match(/^[0-9]+$/)) {
-      extraKeys.push(allKeys[x])
+      extraKeys.push(allKeys[x]);
     }
   }
 
-  return extraKeys
+  return extraKeys;
 }
 
 function has(obj, key) {
   return (
     Object.prototype.hasOwnProperty.call(obj, key) && obj[key] !== undefined
-  )
+  );
 }
 
 function isA(typeName, value) {
-  return Object.prototype.toString.apply(value) === '[object ' + typeName + ']'
+  return Object.prototype.toString.apply(value) === "[object " + typeName + "]";
 }
 
-module.exports = equals
-module.exports.iterableEquality = iterableEquality
-module.exports.subsetEquality = subsetEquality
+module.exports = equals;
+module.exports.iterableEquality = iterableEquality;
+module.exports.subsetEquality = subsetEquality;
