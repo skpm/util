@@ -51,7 +51,20 @@ test("should inspect prototype of a wrapped object", () => {
   const Artboard = require("sketch").Artboard;
 
   const artboard = new Artboard();
-  expect(util.inspect(artboard.__proto__.__proto__)).toEqual(
+  expect(util.inspect(artboard.__proto__.__proto__)).toBe(
     "{ layers: [Getter/Setter] }"
+  );
+});
+
+test("should inspect an error", () => {
+  const error = new Error('this is an error')
+  expect(util.inspect(error)).toMatch(
+    "Error: this is an error"
+  );
+
+  const errorWithNativeException = new Error('this is an error')
+  errorWithNativeException.nativeException = NSException.exceptionWithName_reason_userInfo("test", "test", null)
+  expect(util.inspect(errorWithNativeException)).toMatch(
+    "  nativeException: <NSException> test"
   );
 });

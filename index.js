@@ -355,8 +355,11 @@ function formatValue(ctx, value, recurseTimes, ln) {
     constructor = value.type;
     const propertyList = value.constructor._DefinedPropertiesKey;
     const json = {};
-    Object.keys(propertyList).forEach(k => {
+    Object.keys(propertyList).forEach(function (k) {
       if (!propertyList[k].exportable) {
+        return;
+      }
+      if (typeof value[k] === 'undefined') {
         return;
       }
       json[k] = value[k];
@@ -412,8 +415,14 @@ function formatValue(ctx, value, recurseTimes, ln) {
     base = value.toISOString();
   } else if (isError(value)) {
     // Make error with message first say the error
-    if (keyLength === 0) return formatError(value);
-    base = `${formatError(value)}`;
+    base = formatError(ctx, value);
+    for (var i = 0; i < keys.length; i++) {
+      // those 3 keys are set by JSCore by default so we won't count them
+      if (key === 'line' || key === 'column' || key === 'sourceURL') {
+        keyLength -= 1
+      }
+    }
+    if (keyLength === 0) return base;
   } else if (!isObject(value) && getNativeClass(value)) {
     var description = value && value.description && String(value.description());
     var nativeClass = getNativeClass(value);
@@ -660,8 +669,29 @@ function formatPrimitive(fn, value, ctx) {
   }
 }
 
-function formatError(value) {
-  return value.stack || "[" + Error.prototype.toString.call(value) + "]";
+function formatError(ctx, value) {
+  var str = Error.prototype.toString.call(value);
+  if (!value.stack) {
+    return str;
+  }
+  var indentation = getIndentation(ctx.indentationLvl);
+  var stacks = value.stack.split('\n').slice(0, 10)
+
+  for (var i = 0; i < stacks.length; i++) {
+    var parts = stacks[i].split('/')
+    var fn = parts.shift().replace(/@$/, '')
+    var callsite = '/' + parts.join('/')
+    str += '\n' + indentation + '    at '
+    if (fn) {
+      str += fn + ' ('
+    }
+    str += callsite
+    if (fn) {
+      str += ')'
+    }
+  }
+
+  return str
 }
 
 function formatArray(ctx, value, recurseTimes, keys) {
