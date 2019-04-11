@@ -395,7 +395,7 @@ function formatValue(ctx, value, recurseTimes, ln) {
     var name =
       (constructor === "Object" ? "function MOMethod" : constructor) +
       (value.name ? ": " + value.name : "");
-    if (keyLength === 0) return ctx.stylize(`[${name}]`, "special");
+    if (keyLength === 0) return ctx.stylize("[" + name + "]", "special");
     base = "[" + name + "]";
   } else if (prefix === "Object ") {
     // Object fast path
@@ -642,7 +642,7 @@ function formatPrimitive(fn, value, ctx) {
         //
         // eslint-disable-next-line max-len, node-core/no-unescaped-regexp-dot
         readableRegExps[divisor] = new RegExp(
-          `(.|\\n){1,${divisor}}(\\s|$)|(\\n|.)+?(\\s|$)`,
+          "(.|\\n){1," + divisor + "}(\\s|$)|(\\n|.)+?(\\s|$)",
           "gm"
         );
       }
