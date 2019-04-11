@@ -417,9 +417,10 @@ function formatValue(ctx, value, recurseTimes, ln) {
     // Make error with message first say the error
     base = formatError(ctx, value);
     for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
       // those 3 keys are set by JSCore by default so we won't count them
       if (key === 'line' || key === 'column' || key === 'sourceURL') {
-        keyLength -= 1
+        keyLength -= 1;
       }
     }
     if (keyLength === 0) return base;
