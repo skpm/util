@@ -52,7 +52,7 @@ test("should inspect prototype of a wrapped object", () => {
 
   const artboard = new Artboard();
   expect(util.inspect(artboard.__proto__.__proto__)).toBe(
-    "{ layers: [Getter/Setter] }"
+    "{ layers: [Getter/Setter], smartLayout: [Getter/Setter] }"
   );
 });
 
