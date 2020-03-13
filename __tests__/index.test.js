@@ -23,7 +23,7 @@ test("should inspect", (context, document) => {
   expect(util.inspect(document.pages[0])).toBe(
     `Page {\n  type: 'Page',\n  id: '${
       document.pages[0].id
-    }',\n  frame: { x: 0, y: 0, width: 0, height: 0 },\n  name: 'Page',\n  selected: true,\n  sharedStyleId: null,\n  layers: [  ] }`
+    }',\n  frame: { x: 0, y: 0, width: 0, height: 0 },\n  name: 'Page 1',\n  selected: true,\n  sharedStyleId: null,\n  layers: [  ] }`
   );
   expect(
     util.inspect({
