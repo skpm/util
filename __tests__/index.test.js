@@ -64,7 +64,7 @@ test("should inspect an error", () => {
 
   const errorWithNativeException = new Error('this is an error')
   errorWithNativeException.nativeException = NSException.exceptionWithName_reason_userInfo("test", "test", null)
-  expect(util.inspect(errorWithNativeException)).toMatch(
-    "  nativeException: <NSException> test"
+  expect(util.inspect(errorWithNativeException.nativeException)).toMatch(
+    "<NSException> test"
   );
 });
